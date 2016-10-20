@@ -47,7 +47,7 @@ class fiber_control {
   struct fiber {
     simple_spinlock lock;
     fiber_control* parent;
-    boost::context::fcontext_t* context;
+    boost::context::fcontext_t context;
     void* stack;
     size_t id;
     affinity_type affinity;

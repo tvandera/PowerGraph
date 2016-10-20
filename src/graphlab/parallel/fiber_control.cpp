@@ -340,11 +340,11 @@ void fiber_control::yield_to(fiber* next_fib) {
     t->cur_fiber = next_fib;
     if (t->prev_fiber != NULL) {
       // context switch to fib outside the lock
-      boost::context::jump_fcontext(t->prev_fiber->context,
+      boost::context::jump_fcontext(&(t->prev_fiber->context),
                                     t->cur_fiber->context,
                                     t->cur_fiber->initial_trampoline_args);
     } else {
-      boost::context::jump_fcontext(&t->base_context,
+      boost::context::jump_fcontext(&(t->base_context),
                                     t->cur_fiber->context,
                                     t->cur_fiber->initial_trampoline_args);
     }
@@ -362,8 +362,8 @@ void fiber_control::yield_to(fiber* next_fib) {
       // (as identifibed by cur_fiber = NULL)
       t->prev_fiber = t->cur_fiber;
       t->cur_fiber = NULL;
-      boost::context::jump_fcontext(t->prev_fiber->context,
-                                    &t->base_context,
+      boost::context::jump_fcontext(&(t->prev_fiber->context),
+                                    t->base_context,
                                     0);
     } else {
       // nothing to do, and not terminating...

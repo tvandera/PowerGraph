@@ -43,7 +43,7 @@ int main(int argc, char ** argv) {
   
   if (dc.numprocs() != 2) {
     std::cout<< "RPC Example 1: Basic Synchronous RPC\n";
-    std::cout << "Run with exactly 2 MPI nodes.\n";
+    std::cout << "Run with exactly 2 MPI nodes. " <<  dc.numprocs() << "\n";
     return 0;
   }
   

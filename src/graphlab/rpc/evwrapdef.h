@@ -1,3 +1,4 @@
+#if 0
 #define event_active gl_event_active
 #define event_active_nolock gl_event_active_nolock
 #define event_add gl_event_add
@@ -520,3 +521,4 @@
 #define evrpc_resume_request gl_evrpc_resume_request
 #define evrpc_send_request_generic gl_evrpc_send_request_generic
 #define evrpc_unregister_rpc gl_evrpc_unregister_rpc
+#endif

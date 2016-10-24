@@ -91,7 +91,7 @@ install(DIRECTORY src/
   DESTINATION include
   FILES_MATCHING PATTERN "*.hpp"  PATTERN "*.h"
   PATTERN ".svn" EXCLUDE
-  )
+)
 
 find_package(Eigen3)
 if(EIGEN3_FOUND)
@@ -105,24 +105,6 @@ macro(requires_eigen NAME)
 endmacro(requires_eigen)
 
 if(NOT NO_TCMALLOC)
-    if(APPLE)
-    set (tcmalloc_shared "--enable-shared=yes")
-    else()
-    set (tcmalloc_shared "--enable-shared=no")
-    endif()
-
-    # TCMalloc  ===================================================================
-    # We use tcmalloc for improved memory allocation performance
-    ExternalProject_Add(libtcmalloc
-    PREFIX ${GraphLab_SOURCE_DIR}/deps/tcmalloc
-    # Some users can't access domain googlecode.com ,This is a spare URL
-    # URL http://sourceforge.jp/projects/sfnet_gperftools.mirror/downloads/gperftools-2.0.tar.gz
-    URL "https://github.com/gperftools/gperftools/archive/gperftools-2.0.tar.gz"
-    URL_MD5 2b412c4c8cf20b226bfc1d062ad25c7c
-    PATCH_COMMAND patch -N -p0 -i ${GraphLab_SOURCE_DIR}/patches/tcmalloc.patch || true
-    CONFIGURE_COMMAND <SOURCE_DIR>/configure --enable-frame-pointers --prefix=<INSTALL_DIR> ${tcmalloc_shared}
-    INSTALL_DIR ${GraphLab_SOURCE_DIR}/deps/local)
-    #link_libraries(tcmalloc)
     set(TCMALLOC-FOUND 1)
     add_definitions(-DHAS_TCMALLOC)
 endif()
@@ -198,7 +180,6 @@ macro(requires_core_deps NAME)
 
   if(NOT NO_TCMALLOC)
     target_link_libraries(${NAME} tcmalloc)
-    add_dependencies(${NAME} libtcmalloc)
   endif()
 endmacro(requires_core_deps)
 
@@ -389,24 +370,18 @@ macro(add_graphlab_executable NAME)
   add_executable(${NAME} ${ARGN})
   target_link_libraries(${NAME} graphlab)
   add_dependencies(${NAME} graphlab)
+  install(TARGETS ${NAME} DESTINATION bin)
   requires_core_deps(${NAME})
 endmacro(add_graphlab_executable)
 
 
 macro(add_extension_executable NAME)
   add_executable(${NAME} extension_main.cpp ${ARGN})
-#  if(!APPLE)
-#set_target_properties(${NAME} PROPERTIES LINK_FLAGS -Wl,-wrap,main)
-#  endif()
   target_link_libraries(${NAME} graphlab graphlab_extension)
   add_dependencies(${NAME} graphlab graphlab_extension)
   requires_core_deps(${NAME})
 endmacro(add_extension_executable)
 
-
-
-add_custom_target(external_dependencies)
-# requires_core_deps(external_dependencies)
 
 # add_jni_library =============================================================
 # If jni was found then create a jni library.  Otherwise generate a warning

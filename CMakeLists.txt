@@ -124,8 +124,11 @@ if(NOT NO_JAVAC)
   find_package(Java)
   find_package(JNI)
   include_directories(${JNI_INCLUDE_DIRS})
+  get_filename_component(JAVA_JVM_LIBRARY_DIR ${JAVA_JVM_LIBRARY} DIRECTORY)
+  SET(CMAKE_INSTALL_RPATH ${JAVA_JVM_LIBRARY_DIR})
 
   find_library(HDFS_LIBRARY hdfs)
+
 
   # Ant is used to build the graphlab JVM interface
   find_package(Ant)
